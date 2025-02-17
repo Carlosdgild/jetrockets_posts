@@ -22,6 +22,8 @@ gem 'rest-client', '~> 2.1.0'
 gem 'active_model_serializers', '~> 0.10.6'
 # CORS
 gem 'rack-cors', '~> 2.0', '>= 2.0.2'
+# Paranoia
+gem 'paranoia', '~> 3.0', '>= 3.0.1'
 
 group :development, :test do
   # Static analysis for security vulnerabilities [https://brakemanscanner.org/]
