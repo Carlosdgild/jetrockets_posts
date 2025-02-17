@@ -7,6 +7,12 @@ class PostsController < ApplicationController
     json_response result, :created, serializer: PostCreateSerializer
   end
 
+  # It can also validates if required N post is lesser or equal than Post.count
+  def top_n_posts
+    result = Post.retrieve_post_by_average(params.require(:n))
+    json_response result, :ok, each_serializer: TopNPostsSerializer
+  end
+
   private
 
   # Retrieve authorized params to create a post
