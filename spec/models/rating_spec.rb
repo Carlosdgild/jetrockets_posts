@@ -49,6 +49,18 @@ RSpec.describe Rating, type: :model do
         expect(rating.errors[:post]).to include('must exist')
       end
     end
+
+    context 'when validates validates_uniqueness_of' do
+      it 'raises error when trying to create a new rating with same post and user' do
+        user = create(:user)
+        post = create(:post)
+        create(:rating, user: user, post: post)
+        expect do
+          create(:rating, user: user, post: post)
+        end.to raise_error(ActiveRecord::RecordInvalid)
+        expect(described_class.count).to eq(1)
+      end
+    end
   end
 
   describe 'acts_as_paranoid' do

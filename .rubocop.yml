@@ -666,6 +666,9 @@ Rails/WhereRange:
   Enabled: true
 RSpec/MultipleMemoizedHelpers:
   Max: 8
+RSpec/NamedSubject:
+  Enabled: false
+
 # explicitly disabled unique indexes
 Rails/UniqueValidationWithoutIndex:
   Enabled: false
