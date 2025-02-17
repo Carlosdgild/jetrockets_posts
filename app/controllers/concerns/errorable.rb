@@ -23,12 +23,7 @@ module Errorable
     # Validation errors are rendered with `ErrorSerializer`
     # @return nil
     rescue_from ActiveRecord::RecordInvalid do |e|
-      json_response(
-        e.record,
-        :unprocessable_entity,
-        adapter: :attributes,
-        serializer: ErrorSerializer
-      )
+      json_response({ message: e.message }, :unprocessable_entity)
     end
 
     # global error handling for +ArgumentError+
