@@ -46,7 +46,7 @@ group :test do
   # gem 'pundit-matchers', '~> 1.6.0'
   # use database_cleaner to truncate the contents of the database in every
   # example run
-  gem 'database_cleaner', '~> 1.8.5'
+  gem 'database_cleaner', '~> 2.0', '>= 2.0.2'
   # enable mocks within context examples
   gem 'webmock', '~> 3.8.3'
   # use `timecop` for "time travel" and "time freezing" capabilities
