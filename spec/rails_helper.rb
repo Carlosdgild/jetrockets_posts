@@ -42,7 +42,6 @@ end
 # disable HTTP connections
 WebMock.disable_net_connect!
 
-
 RSpec.configure do |config|
   # rails 6 requires to explicitly set job queue
   config.before :example, :perform_enqueued do
