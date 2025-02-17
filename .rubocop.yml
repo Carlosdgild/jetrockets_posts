@@ -628,7 +628,7 @@ Rails/StripHeredoc:
   Enabled: true
 
 Rails/StrongParametersExpect:
-  Enabled: true
+  Enabled: false
 
 Rails/ThreeStateBooleanColumn:
   Enabled: true
