@@ -3,7 +3,7 @@
 require 'rails_helper'
 
 RSpec.describe PostsController, type: :controller do
-  describe 'POST #/v1/create' do
+  describe 'POST /posts' do
     let(:params) do
       { title: 'New Post', body: 'Post content', login: 'user123', ip: '192.168.0.1' }
     end
@@ -102,6 +102,51 @@ RSpec.describe PostsController, type: :controller do
         expect(response).to have_http_status(:unprocessable_entity)
         json_response = json
         expect(json_response['message']).to eq("Validation failed: Title can't be blank, Body can't be blank")
+      end
+    end
+  end
+
+  describe 'GET posts/top_n_posts' do
+    let!(:first_post) { create(:post, title: 'Post 1', body: 'Body 1') }
+    let!(:second_post) { create(:post, title: 'Post 2', body: 'Body 2') }
+    let!(:third_post) { create(:post, title: 'Post 3', body: 'Body 3') }
+
+    before do
+      create(:rating, post: first_post, value: 5)
+      create(:rating, post: second_post, value: 3)
+      create(:rating, post: third_post, value: 4)
+    end
+
+    context 'when requesting the top 2 posts' do
+      it 'returns the top post by average rating' do
+        get :top_n_posts, params: { n: 1 }
+        expect(response).to have_http_status(:ok)
+        json_response = json
+        expect(json_response.count).to eq(1)
+        expect(json_response[0]['id']).to eq(first_post.id)
+        expect(json_response[0]['title']).to eq('Post 1')
+        expect(json_response[0]['body']).to eq('Body 1')
+      end
+
+      it 'returns the top 2 posts by average rating' do
+        get :top_n_posts, params: { n: 2 }
+        expect(response).to have_http_status(:ok)
+        json_response = json
+        expect(json_response.count).to eq(2)
+        expect(json_response[0]['title']).to eq('Post 1')
+        expect(json_response[1]['title']).to eq('Post 3')
+      end
+    end
+
+    context 'when the parameter is not given' do
+      it 'returns bad request' do
+        get :top_n_posts
+        expect(response).to have_http_status(:bad_request)
+      end
+
+      it 'returns bad request when is empty string' do
+        get :top_n_posts, params: { n: '' }
+        expect(response).to have_http_status(:bad_request)
       end
     end
   end
