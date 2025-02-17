@@ -150,4 +150,45 @@ RSpec.describe PostsController, type: :controller do
       end
     end
   end
+
+  describe 'GET /posts/post_by_authors' do
+    before do
+      first_user = create(:user, login: 'author1')
+      second_user = create(:user, login: 'author2')
+      third_user = create(:user, login: 'author3')
+      create(:post, user: first_user, ip: '192.168.1.1')
+      create(:post, user: second_user, ip: '192.168.1.1')
+      create(:post, user: third_user, ip: '192.168.1.2')
+      create(:post, user: first_user, ip: '192.168.1.2')
+      create(:post, user: first_user, ip: '192.168.1.3')
+    end
+
+    it 'returns IPs used by more than 1 author' do
+      get :post_by_authors
+      expect(response).to have_http_status(:ok)
+      json_response = json
+      expect(json_response.length).to eq(2)
+      expect(json_response.first).to eq({ '192.168.1.1' => %w[author1 author2] })
+      expect(json_response.last).to eq({ '192.168.1.2' => %w[author1 author3] })
+    end
+
+    it 'returns IPs used by more than N authors' do
+      user = create(:user, login: 'author4')
+      create(:post, user: user, ip: '192.168.1.1')
+      get :post_by_authors, params: { n: 2 }
+      expect(response).to have_http_status(:ok)
+      json_response = json
+      expect(json_response.length).to eq(1)
+      expect(json_response.first).to eq({ '192.168.1.1' => %w[author1 author2 author4] })
+    end
+
+    it 'return empty array when nothing is found' do
+      user = create(:user, login: 'author4')
+      create(:post, user: user, ip: '192.168.1.1')
+      get :post_by_authors, params: { n: 99 }
+      expect(response).to have_http_status(:ok)
+      json_response = json
+      expect(json_response).to be_empty
+    end
+  end
 end

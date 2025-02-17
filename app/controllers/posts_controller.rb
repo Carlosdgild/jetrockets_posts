@@ -2,7 +2,6 @@
 
 # PostsController
 class PostsController < ApplicationController
-
   # Creates a new post with the given params
   # @example
   # {
@@ -17,7 +16,6 @@ class PostsController < ApplicationController
     json_response result, :created, serializer: PostCreateSerializer
   end
 
-
   # Retrieves N top post that have been rated. If a post has no rating, it will not be returned
   # @example
   # [{"id"=>413, "title"=>"Post 1", "body"=>"Body 1"}]
@@ -25,6 +23,19 @@ class PostsController < ApplicationController
     # It can also validates if required N post is lesser or equal than Post.count
     result = Post.retrieve_post_by_average(params.require(:n))
     json_response result, :ok, each_serializer: TopNPostsSerializer
+  end
+
+  # Retrieves an Array that cotains objects which the key is the ip of the post
+  # and the value is another array with the user login
+  # @example
+  # [
+  #   {"192.168.1.1"=>["author1", "author2"]},
+  #   {"192.168.1.2"=>["author1", "author3"]}
+  # ]
+  def post_by_authors
+    result = Post.fetch_posts_shared_ids(params[:n])
+    result = result.map { |ip, authors| { ip => authors } }
+    json_response result
   end
 
   private

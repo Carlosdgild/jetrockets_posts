@@ -24,4 +24,15 @@ class Post < ApplicationRecord
       .order('AVG(ratings.value) DESC')
       .limit(value)
   end
+
+  # Fetch records that have been created for same ip, group them
+  # and filtering by amount of users that created
+  # @returns Array
+  def self.fetch_posts_shared_ids(value = 1)
+    value = value.presence || 1
+    joins(:user)
+      .group(:ip)
+      .having('COUNT(DISTINCT users.id) > ?', value.to_i)
+      .pluck(:ip, Arel.sql('ARRAY_AGG(DISTINCT users.login)'))
+  end
 end
