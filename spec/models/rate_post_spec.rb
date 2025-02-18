@@ -10,11 +10,6 @@ RSpec.describe RatePost, type: :model do
   let(:rating_value) { 4 }
 
   describe '#initialize' do
-    it 'initializes with user and post' do
-      expect(subject.user).to eq(user)
-      expect(subject.post).to eq(post)
-    end
-
     it 'when missing all params' do
       expect do
         described_class.new({})

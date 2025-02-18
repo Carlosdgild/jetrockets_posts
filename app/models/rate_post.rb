@@ -17,9 +17,17 @@ class RatePost < ActiveModelSerializers::Model
 
   def initialize(args = {})
     args.each { |k, v| send("#{k}=", v) }
-    self.user = User.find(user_id)
-    self.post = Post.find(post_id)
+    validate_user_and_post!
     perform!
+  end
+
+  # Validates if user and post exists to create a new rating
+  # @returns nil
+  # @raise ActiveRecord::RecordNotFound
+  def validate_user_and_post!
+    return if User.exists?(user_id) && Post.exists?(post_id)
+
+    raise ActiveRecord::RecordNotFound.new('User or post does not exist')
   end
 
   # Finds or create a rating. If another process creates the user while trying

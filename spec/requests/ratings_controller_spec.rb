@@ -54,7 +54,7 @@ RSpec.describe RatingsController, type: :controller do
         post :create, params: { rating: params }
         # status code expectations
         expect(response).to have_http_status(:not_found)
-        expect(json['message']).to include("Couldn't find User")
+        expect(json['message']).to eq('User or post does not exist')
         expect(Rating.count).to eq(0)
       end
 
@@ -63,7 +63,7 @@ RSpec.describe RatingsController, type: :controller do
         post :create, params: { rating: params }
         # status code expectations
         expect(response).to have_http_status(:not_found)
-        expect(json['message']).to include("Couldn't find Post")
+        expect(json['message']).to eq('User or post does not exist')
         expect(Rating.count).to eq(0)
       end
 
@@ -81,7 +81,7 @@ RSpec.describe RatingsController, type: :controller do
         post :create, params: { rating: params }
         # status code expectations
         expect(response).to have_http_status(:not_found)
-        expect(json['message']).to include("Couldn't find User")
+        expect(json['message']).to eq('User or post does not exist')
         expect(Rating.count).to eq(0)
       end
 
@@ -90,7 +90,7 @@ RSpec.describe RatingsController, type: :controller do
         post :create, params: { rating: params }
         # status code expectations
         expect(response).to have_http_status(:not_found)
-        expect(json['message']).to include("Couldn't find Post")
+        expect(json['message']).to eq('User or post does not exist')
         expect(Rating.count).to eq(0)
       end
     end
